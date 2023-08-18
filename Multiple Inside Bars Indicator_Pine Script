@@ -1,0 +1,25 @@
+
+
+//@version=5
+indicator("Inside Bars (Multiple / Consecutive)", "Inside Bars Multi", overlay = true)
+
+firstColorInput = input.color(color.yellow, "First Inside Bar")
+consecutiveColorInput = input.color(color.yellow, "Consecutive Inside Bars")
+
+var float highBeforeInsideBar = na
+var float lowBeforeInsideBar = na
+var bool consecutiveInsideBars = false
+
+isInsideBar = high <= high[1] and low >= low[1]
+
+if isInsideBar and not consecutiveInsideBars
+    highBeforeInsideBar := high[1]
+    lowBeforeInsideBar := low[1]
+    consecutiveInsideBars := true
+
+if high > highBeforeInsideBar or low < lowBeforeInsideBar
+    highBeforeInsideBar := na
+    lowBeforeInsideBar := na
+    consecutiveInsideBars := false
+
+barcolor(isInsideBar ? firstColorInput : consecutiveInsideBars ? consecutiveColorInput : na)
