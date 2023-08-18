@@ -1,0 +1,57 @@
+//@version=5
+strategy("Marubozu Candlestick Breakout", overlay = true, initial_capital = 50000, process_orders_on_close = true)
+
+tradein = time("60", "0915-1415")
+tradeout = time("60", "1515-1615")
+
+var float High = na
+var float Low = na
+var bool trade_long = false
+var bool trade_short = false
+
+bull = (close - open)/(high - low) >= 0.9
+bear = (open - close)/(high - low) >= 0.9
+
+if bull
+    trade_long := true
+    High := high
+    Low := low
+
+if bear
+    trade_short := true
+    High := high
+    Low := low
+
+plot(High)
+plot(Low)
+
+/// buy and sell signals
+long = ta.crossover(close, High) and trade_long and tradein
+short = ta.crossunder(close, Low) and trade_short and tradein
+
+/// strategy
+if long
+    strategy.entry("Long", strategy.long)
+
+if short
+    strategy.entry("Short", strategy.short)
+
+sl = 0.0
+target = 0.0
+
+if strategy.position_size > 0
+    sl := Low
+    target := High + 3*(High - Low)
+    strategy.exit("Long Exit", "Long", stop = sl, limit = target)
+
+if strategy.position_size < 0
+    sl := High
+    target := Low - 3*(High - Low)
+    strategy.exit("Short Exit", "Short", stop = sl, limit = target)
+
+if tradeout
+    strategy.close_all()
+    High := na
+    Low := na
+    trade_long := false
+    trade_short := false
