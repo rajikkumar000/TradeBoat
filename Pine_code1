@@ -1,0 +1,67 @@
+//@version=5
+strategy("NR3", overlay = true, initial_capital = 200000, process_orders_on_close=true)
+
+var float High = na
+var float Low = na
+var bool trade_long = false
+var bool trade_short = false
+
+alert = (low >= low[1]) and (low[1] >= low[2]) and (high <= high[1]) and (high[1] <= high[2])
+
+if alert
+    High := high
+    Low := low
+
+plot(High)
+plot(Low)
+
+// buy and sell signals
+long = ta.crossover(close, High)
+short = ta.crossunder(close, Low)
+
+// strategy
+if long
+    strategy.entry("Long",strategy.long)
+
+if short
+    strategy.entry("Short", strategy.short)
+
+sl = 0.0
+target = 0.0
+
+if strategy.position_size > 0
+    sl := Low
+    target := High + 5*(High - Low)
+    strategy.exit("Long Exit", "Long", stop = sl, limit = target)
+
+if strategy.position_size < 0
+    sl := High
+    target := Low - 5*(High - Low)
+    strategy.exit("Short Exit", "Short", stop = sl, limit = target)
+
+
+Multiple Inside Bars Indicator
+
+//@version=5
+indicator("Inside Bars (Multiple / Consecutive)", "Inside Bars Multi", overlay = true)
+
+firstColorInput = input.color(color.yellow, "First Inside Bar")
+consecutiveColorInput = input.color(color.yellow, "Consecutive Inside Bars")
+
+var float highBeforeInsideBar = na
+var float lowBeforeInsideBar = na
+var bool consecutiveInsideBars = false
+
+isInsideBar = high <= high[1] and low >= low[1]
+
+if isInsideBar and not consecutiveInsideBars
+    highBeforeInsideBar := high[1]
+    lowBeforeInsideBar := low[1]
+    consecutiveInsideBars := true
+
+if high > highBeforeInsideBar or low < lowBeforeInsideBar
+    highBeforeInsideBar := na
+    lowBeforeInsideBar := na
+    consecutiveInsideBars := false
+
+barcolor(isInsideBar ? firstColorInput : consecutiveInsideBars ? consecutiveColorInput : na)
