@@ -1,1 +1,42 @@
 
+Some Syntex  short notex for pine script 
+ChatGPT
+Sure, here are some key syntax notes for Pine Script:
+
+Variables and Data Types:
+
+Declare variables: var_name = expression
+Data types: int, float, bool, string, series
+Plotting:
+
+Plot a value: plot(value, title="Plot Title", color=color.blue)
+Line style: plot(..., style=plot.style_circles)
+Conditions and Operators:
+
+Conditional: if condition
+Ternary operator: condition ? value_if_true : value_if_false
+Logical operators: and, or, not
+Moving Averages:
+
+Simple MA: sma = sma(close, length)
+Exponential MA: ema = ema(close, length)
+Crossovers:
+
+Moving average crossover: crossover(sma1, sma2)
+Inputs:
+
+Define input: input(title="Input Name", type=input.integer, defval=14)
+Access input: input_var = input_var
+Function Declaration:
+
+Declare function: myFunction(arg1, arg2) => ...
+Series Operations:
+
+Shift a series: shifted_series = series[1]
+Alerts:
+
+Create alert condition: alertcondition(condition, title="Alert Title", message="Alert Message")
+Strategy Orders:
+
+Entry: strategy.entry("Long", strategy.long, when=condition)
+Exit: strategy.exit("Exit", from_entry="Long", when=condition)
