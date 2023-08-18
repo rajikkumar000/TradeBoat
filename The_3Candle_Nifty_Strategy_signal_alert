@@ -1,0 +1,80 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © rajikkumar337
+//@version=5
+strategy(title = "My strategy" , overlay = true)
+
+a = color.green
+b= color.red 
+
+green = a
+red = b
+
+// Calculate candle colors
+candleColor1 = close[4] > open[4] ? green : red    // green 
+candleColor2 = close[3] > open[3] ? green : red // green 
+candleColor3 = close[2] > open[2] ? green : red  // green 
+candleColor4 = close[1] > open[1] ? green : red // red  importent 
+candleColor5 = close    > open    ? green : red  // green 
+
+ // Long Condiotuions all please enter here
+
+longCondition = candleColor1 == green and candleColor2 == green and candleColor3 == green and candleColor4 ==red and candleColor5 == green
+
+longCondition2 = close > (close[1]+open[1])/2
+
+//longCondition3 = close-close[1] < 60 and (close[1]-open[2]<10 and open[1]-open[2] >-10)
+
+longCondition4 = close>open[1]*0.7  and close-open[1] < 70
+
+longCondition5 = close > open[1]  and  ( close[1]-low[1] ) <40
+
+
+longCondition6 =   volume > volume[1] and volume[1]> volume[2]
+
+
+buys = longCondition and longCondition2 and longCondition4 and longCondition5 and longCondition6
+
+
+// Calculate stop loss and target levels
+stopLoss = 30 // Stop loss is the close of the previous candle
+
+risk_reward = 3 
+targets = 75 //stopLoss*risk_reward  // Target is 3 times the stop loss
+
+
+ // Short  Condiotuions all please enter here 
+
+shortCondition = candleColor1 == red and candleColor2 == red and candleColor3 == red and candleColor4 ==green and candleColor5 == red
+
+shortCondition2 =  close < (close[1] + open[1])/2
+
+
+shortCondition3 = close > (close[1]+open[1])/2
+
+//longCondition3 = close-close[1] < 60 and (close[1]-open[2]<10 and open[1]-open[2] >-10)
+
+shortCondition4 = close>open[1]*0.7  and close-open[1] < 70
+
+shortCondition5 = close > open[1]
+
+
+// Calculate stop loss and target levels
+stopLoss2 = 40 // Stop loss is the close of the previous candle
+
+risk_reward2 = 5
+targets2 = stopLoss2 * risk_reward2 // Target is 3 times the stop loss
+
+
+sells = shortCondition and shortCondition2 and close < close[1] and close-open[1] > -50  
+
+
+// visualise 
+plotshape(buys,title = 'Buy', style = shape.labelup, location = location.belowbar, color = color.green , textcolor = color.white , text = "Buy")
+//plotshape(sells,title = 'Sell', style = shape.labeldown, location = location.abovebar, color = color.red , textcolor = color.white ,text = "Sell")
+
+if buys
+
+    strategy.entry('Long', strategy.long , qty = 1 )
+strategy.exit("exit", "Long", profit = 20*targets , loss = 20*stopLoss ) 
+
+
